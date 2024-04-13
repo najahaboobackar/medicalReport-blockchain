@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 {
@@ -8,3 +9,14 @@
     }
   }
   
+=======
+{
+    "31337": {
+        "medical": {
+            "address": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9"
+        },
+        "explorerURL": "#"
+    }
+}
+   
+>>>>>>> a5b03211c91015d15912112b5fcd574189daf75c
