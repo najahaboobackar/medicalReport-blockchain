@@ -1,6 +1,7 @@
-//SDPX-License-Identifier:MIT
+//SPDX-License-Identifier:MIT
 pragma solidity ^0.8.0;
-contract MedicalRecord{
+
+contract MedicalRecords {
     uint public recordId;
     mapping(uint => Record) records;
     mapping(uint => bool) public isDeleted;
@@ -15,6 +16,7 @@ contract MedicalRecord{
         string diagnosis;
         string treatment;
     }
+
     event MedicalRecords__AddRecord(
         uint recordId,
         uint timestamp,
@@ -60,7 +62,7 @@ contract MedicalRecord{
             _treatment
         );
         emit MedicalRecords__AddRecord(
-        recordId,
+            recordId,
             block.timestamp,
             _name,
             _age,
@@ -69,10 +71,10 @@ contract MedicalRecord{
             _allergies,
             _diagnosis,
             _treatment
-            );
+        );
+    }
 
-   }
-   function deleteRecord(uint _recordId) public {
+    function deleteRecord(uint _recordId) public {
         require(!isDeleted[_recordId], "The record is already deleted");
         Record storage record = records[_recordId];
         emit MedicalRecords__DeleteRecord(
@@ -87,6 +89,35 @@ contract MedicalRecord{
             record.treatment
         );
         isDeleted[_recordId] = true;
+    }
+
+    function getRecord(
+        uint _recordId
+    )
+        public
+        view
+        returns (
+            uint,
+            string memory,
+            uint,
+            string memory,
+            string memory,
+            string memory,
+            string memory,
+            string memory
+        )
+    {
+        Record storage record = records[_recordId];
+        return (
+            record.timestamp,
+            record.name,
+            record.age,
+            record.gender,
+            record.bloodType,
+            record.allergies,
+            record.diagnosis,
+            record.treatment
+        );
     }
 
     function getRecordId() public view returns (uint) {
@@ -128,7 +159,4 @@ contract MedicalRecord{
     function getDeleted(uint256 _recordId) public view returns (bool) {
         return isDeleted[_recordId];
     }
-
 }
-
- 
