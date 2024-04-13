@@ -3,11 +3,12 @@ const { ethers } = require("hardhat");
 async function main() {
   console.log("Deploying the smart contract...");
 
-  const Medical = await ethers.getContractFactory("MedicalRecord");
+  const Medical = await ethers.getContractFactory("MedicalRecords");
   const accounts = await ethers.getSigners();
 
   const medical = await Medical.connect(accounts[0]).deploy();
-  await medical.deployed();
+
+  await medical.deployTransaction.wait(); // Wait for the deployment transaction to be mined
 
   console.log(`Medical contract deployed at address: ${medical.address}`);
 
