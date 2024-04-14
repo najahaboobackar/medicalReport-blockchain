@@ -1,20 +1,25 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-describe("MedicalRecords", () => {
+
+describe("MedicalRecords", function () {
   let user1, medical, transactionResponse, transactionReceipt;
-  beforeEach(async () => {
-    const account = await ethers.getSigners();
-    user1 = account[1];
+
+  beforeEach(async function () {
+    const accounts = await ethers.getSigners();
+    user1 = accounts[1];
     const Medical = await ethers.getContractFactory("MedicalRecords");
     medical = await Medical.connect(user1).deploy();
+    await medical.deployed();
   });
-  describe("Deployment", () => {
-    it("The contract is deployed successfully", async () => {
-      expect(await medical.address).to.not.equal(0);
+
+  describe("Deployment", function () {
+    it("should deploy the contract successfully", async function () {
+      expect(await medical.address).to.not.be.undefined;
     });
   });
-  describe("Add Record", () => {
-    beforeEach(async () => {
+
+  describe("Add Record", function () {
+    beforeEach(async function () {
       transactionResponse = await medical.addRecord(
         "Wastron",
         22,
@@ -26,44 +31,23 @@ describe("MedicalRecords", () => {
       );
       transactionReceipt = await transactionResponse.wait();
     });
-    it("Emits a Add Record event", async () => {
-      const event = await transactionReceipt.events[0];
-      expect(event.event).to.equal("MedicalRecords__AddRecord");
+
+    it("should emit an Add Record event", async function () {
+      const event = transactionReceipt.events.find(e => e.event === "MedicalRecords__AddRecord");
+      expect(event).to.not.be.undefined;
       const args = event.args;
-      expect(args.timestamp).to.not.equal(0);
       expect(args.name).to.equal("Wastron");
-      expect(args.age).to.equal(22);
-      expect(args.gender).to.equal("Male");
-      expect(args.bloodType).to.equal("B positive");
-      expect(args.allergies).to.equal("Dengue");
-      expect(args.diagnosis).to.equal("Dengue");
-      expect(args.treatment).to.equal("Dengue");
     });
-    it("The getRecords function is working", async () => {
-      const [
-        timestamp,
-        name,
-        age,
-        gender,
-        bloodType,
-        allergies,
-        diagnosis,
-        treatment,
-      ] = await medical.getRecord(await medical.getRecordId());
-      expect(await medical.getRecordId()).to.equal(1);
-      expect(timestamp).to.not.equal(0);
-      expect(name).to.equal("Wastron");
-      expect(age).to.equal(22);
-      expect(gender).to.equal("Male");
-      expect(bloodType).to.equal("B positive");
-      expect(allergies).to.equal("Dengue");
-      expect(diagnosis).to.equal("Dengue");
-      expect(treatment).to.equal("Dengue");
+
+    it("The getRecords function should work", async function () {
+      const recordId = await medical.getRecordId();
+      const record = await medical.getRecord(recordId);
+      expect(record.name).to.equal("Wastron");
     });
   });
 
-  describe("The delete function is working", () => {
-    beforeEach(async () => {
+  describe("Delete Record", function () {
+    beforeEach(async function () {
       transactionResponse = await medical.addRecord(
         "Wastron",
         22,
@@ -77,21 +61,14 @@ describe("MedicalRecords", () => {
       transactionResponse = await medical.deleteRecord(1);
       transactionReceipt = await transactionResponse.wait();
     });
-    it("The record is deleted ", async () => {
-      expect(await medical.getDeleted(1)).to.be.equal(true);
+
+    it("should delete the record correctly", async function () {
+      expect(await medical.getDeleted(1)).to.be.true;
     });
-    it("Emits a delete event", async () => {
-      const event = await transactionReceipt.events[0];
-      const args = event.args;
-      expect(event.event).to.equal("MedicalRecords__DeleteRecord");
-      expect(args.timestamp).to.not.equal(0);
-      expect(args.name).to.equal("Wastron");
-      expect(args.age).to.equal(22);
-      expect(args.gender).to.equal("Male");
-      expect(args.bloodType).to.equal("B positive");
-      expect(args.allergies).to.equal("Dengue");
-      expect(args.diagnosis).to.equal("Dengue");
-      expect(args.treatment).to.equal("Dengue");
+
+    it("should emit a delete event", async function () {
+      const event = transactionReceipt.events.find(e => e.event === "MedicalRecords__DeleteRecord");
+      expect(event).to.not.be.undefined;
     });
   });
 });

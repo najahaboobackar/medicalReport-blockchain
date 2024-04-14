@@ -1,10 +1,28 @@
 const { ethers } = require("hardhat");
+
 async function main() {
   console.log("Deploying smart contract...");
+
+  // Get the contract factory
   const Medical = await ethers.getContractFactory("MedicalRecords");
-<<<<<<< HEAD
-  const medical = await Medical.deploy(); // Deploy the contract
-  console.log(`Medical is deployed at address: ${medical.address}`);
+
+  // Get the signer account
+  const accounts = await ethers.getSigners();
+  const deployer = accounts[0]; // Assuming the deployer is the first account
+
+  // Adjust network settings for XDC
+  const network = "xdc"; // Specify the network you want to deploy to
+
+  // Deploy the contract
+  const medical = await Medical.connect(deployer).deploy({
+    gasPrice: 1000000000, // Adjust gas price according to the XDC network
+    gasLimit: 5000000, // Adjust gas limit according to the XDC network
+  });
+
+  // Wait for the contract to be deployed
+  await medical.deployTransaction.wait();
+
+  console.log("Medical is deployed at address:", medical.address);
 }
 
 main()
@@ -13,16 +31,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-=======
-  const account = await ethers.getSigners();
-  const medical = await Medical.connect(account[1]).deploy();
-  await medical.deployed();
-  console.log(`Medical is deployed in address ${medical.address}`);
-}
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.log(error);
-    process.exit(1);
-  });
->>>>>>> a5b03211c91015d15912112b5fcd574189daf75c
