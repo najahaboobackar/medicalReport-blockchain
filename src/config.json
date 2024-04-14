@@ -1,0 +1,33 @@
+{
+    "1": {
+      "medical": {
+        "address": "0xYourAddressOnMainnet"
+      }
+    },
+    "4": {
+      "medical": {
+        "address": "0xYourAddressOnRinkeby"
+      }
+    },
+    "100": {
+      "medical": {
+        "address": "0xYourAddressOnxDai"
+      }
+    },
+    "137": {
+      "medical": {
+        "address": "0xYourAddressOnMatic"
+      }
+    },
+    "43114": {
+      "medical": {
+        "address": "0xYourAddressOnAvalanche"
+      }
+    },
+    "50": {
+      "medical": {
+        "address": "0xYourAddressOnXDC"
+      }
+    }
+  }
+  
